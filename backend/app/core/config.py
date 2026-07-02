@@ -1,4 +1,4 @@
-"""Application configuration using Pydantic Settings."""
+"""Updated configuration with auth settings."""
 
 from typing import Optional
 
@@ -21,7 +21,8 @@ class Settings(BaseSettings):
     # Security
     secret_key: str = "CHANGE_ME_IN_PRODUCTION"
     algorithm: str = "HS256"
-    access_token_expire_minutes: int = 30
+    access_token_expire_minutes: int = 15
+    refresh_token_expire_days: int = 7
 
     # Redis
     redis_url: str = "redis://redis:6379/0"
