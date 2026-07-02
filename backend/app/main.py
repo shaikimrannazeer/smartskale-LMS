@@ -13,7 +13,7 @@ from app.core.logging import get_logger
 from app.db.database import engine, Base
 from app.middleware.request_logger import RequestLoggerMiddleware
 from app.middleware.security_headers import SecurityHeadersMiddleware
-from app.api.v1 import health
+from app.api.v1 import health, auth
 
 logger = get_logger(__name__)
 
@@ -129,6 +129,10 @@ def create_app() -> FastAPI:
     # Include routers
     app.include_router(
         health.router,
+        prefix="/api/v1",
+    )
+    app.include_router(
+        auth.router,
         prefix="/api/v1",
     )
 
