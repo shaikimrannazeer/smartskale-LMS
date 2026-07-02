@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import uuid4
 
-from sqlalchemy import String, Boolean, DateTime, Enum as SQLEnum
+from sqlalchemy import String, Boolean, DateTime, Enum as SQLEnum, Text
 from sqlalchemy.orm import Mapped, mapped_column
 import enum
 
@@ -35,7 +35,11 @@ class User(Base):
         SQLEnum(UserRole),
         default=UserRole.STUDENT,
     )
+    phone: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    profile_image: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    bio: Mapped[str | None] = mapped_column(Text(), nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    is_deleted: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow,
@@ -49,6 +53,8 @@ class User(Base):
         DateTime,
         nullable=True,
     )
+    created_by: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    updated_by: Mapped[str | None] = mapped_column(String(36), nullable=True)
 
     def __repr__(self) -> str:
         """String representation."""

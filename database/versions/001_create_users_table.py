@@ -30,7 +30,11 @@ def upgrade() -> None:
             nullable=False,
             server_default="student",
         ),
+        sa.Column("phone", sa.String(20), nullable=True),
+        sa.Column("profile_image", sa.String(500), nullable=True),
+        sa.Column("bio", sa.Text(), nullable=True),
         sa.Column("is_active", sa.Boolean(), nullable=False, server_default="true"),
+        sa.Column("is_deleted", sa.Boolean(), nullable=False, server_default="false"),
         sa.Column(
             "created_at",
             sa.DateTime(),
@@ -44,13 +48,17 @@ def upgrade() -> None:
             server_default=sa.func.now(),
         ),
         sa.Column("last_login", sa.DateTime(), nullable=True),
+        sa.Column("created_by", sa.String(36), nullable=True),
+        sa.Column("updated_by", sa.String(36), nullable=True),
         sa.PrimaryKeyConstraint("user_id"),
         sa.UniqueConstraint("email"),
     )
     op.create_index(op.f("ix_users_email"), "users", ["email"], unique=False)
+    op.create_index(op.f("ix_users_is_deleted"), "users", ["is_deleted"], unique=False)
 
 
 def downgrade() -> None:
     """Revert migration - Drop users table."""
+    op.drop_index(op.f("ix_users_is_deleted"), table_name="users")
     op.drop_index(op.f("ix_users_email"), table_name="users")
     op.drop_table("users")
